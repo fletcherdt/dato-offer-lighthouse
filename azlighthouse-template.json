@@ -1,0 +1,88 @@
+{
+ "$schema": "https://schema.management.azure.com/schemas/2019-08-01/subscriptionDeploymentTemplate.json#",
+ "contentVersion": "1.0.0.0",
+ "parameters": {
+  "mspOfferName": {
+   "type": "string",
+   "metadata": {
+    "description": "Specify a unique name for your offer"
+   },
+   "defaultValue": "DATO Tech MSP Manager"
+  },
+  "mspOfferDescription": {
+   "type": "string",
+   "metadata": {
+    "description": "Name of the Managed Service Provider offering"
+   },
+   "defaultValue": "Onboarding DATO Tech MSP customers to Azure Lighthouse management. "
+  },
+  "managedByTenantId": {
+   "type": "string",
+   "metadata": {
+    "description": "Specify the tenant id of the Managed Service Provider"
+   },
+   "defaultValue": "cae17864-996e-4f17-9240-10c55e1a1bb6"
+  },
+  "authorizations": {
+   "type": "array",
+   "metadata": {
+    "description": "Specify an array of objects, containing tuples of Azure Active Directory principalId, a Azure roleDefinitionId, and an optional principalIdDisplayName. The roleDefinition specified is granted to the principalId in the provider's Active Directory and the principalIdDisplayName is visible to customers."
+   },
+   "defaultValue": [
+    {
+     "principalId": "3ff39a29-8fb1-4f90-a8d1-3c68e031a2de",
+     "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+     "principalIdDisplayName": "AzLightHouse"
+    },
+    {
+     "principalId": "3ff39a29-8fb1-4f90-a8d1-3c68e031a2de",
+     "roleDefinitionId": "18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+     "principalIdDisplayName": "AzLightHouse"
+    },
+    {
+     "principalId": "3ff39a29-8fb1-4f90-a8d1-3c68e031a2de",
+     "roleDefinitionId": "4a9ae827-6dc8-4573-8ac7-8239d42aa03f",
+     "principalIdDisplayName": "AzLightHouse"
+    }
+   ]
+  }
+ },
+ "variables": {
+  "mspRegistrationName": "[guid(parameters('mspOfferName'))]",
+  "mspAssignmentName": "[guid(parameters('mspOfferName'))]"
+ },
+ "resources": [
+  {
+   "type": "Microsoft.ManagedServices/registrationDefinitions",
+   "apiVersion": "2020-02-01-preview",
+   "name": "[variables('mspRegistrationName')]",
+   "properties": {
+    "registrationDefinitionName": "[parameters('mspOfferName')]",
+    "description": "[parameters('mspOfferDescription')]",
+    "managedByTenantId": "[parameters('managedByTenantId')]",
+    "authorizations": "[parameters('authorizations')]"
+   }
+  },
+  {
+   "type": "Microsoft.ManagedServices/registrationAssignments",
+   "apiVersion": "2020-02-01-preview",
+   "name": "[variables('mspAssignmentName')]",
+   "dependsOn": [
+    "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+   ],
+   "properties": {
+    "registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+   }
+  }
+ ],
+ "outputs": {
+  "mspOfferName": {
+   "type": "string",
+   "value": "[concat('Managed by', ' ', parameters('mspOfferName'))]"
+  },
+  "authorizations": {
+   "type": "array",
+   "value": "[parameters('authorizations')]"
+  }
+ }
+}
