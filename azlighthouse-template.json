@@ -36,11 +36,6 @@
     },
     {
      "principalId": "3ff39a29-8fb1-4f90-a8d1-3c68e031a2de",
-     "roleDefinitionId": "18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
-     "principalIdDisplayName": "AzLightHouse"
-    },
-    {
-     "principalId": "3ff39a29-8fb1-4f90-a8d1-3c68e031a2de",
      "roleDefinitionId": "4a9ae827-6dc8-4573-8ac7-8239d42aa03f",
      "principalIdDisplayName": "AzLightHouse"
     }
